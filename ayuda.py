@@ -64,7 +64,7 @@ def leer_indice():
 
 
 def get_realhref(rel_href):
-    finalpath = os.path.join(DOCSPATH, rel_href)
+    finalpath = os.path.join(DOCS_PATH, rel_href)
     return 'file://' + finalpath
 
 
