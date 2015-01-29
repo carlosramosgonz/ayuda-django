@@ -104,20 +104,20 @@ class IndiceModel(QAbstractListModel):
             self.filtered_titles = tuple(title for title in self.titles if title.startswith(word))
 
     def rowCount(self, parent=QModelIndex()):
-        if self.filtered_titles:
+        if self.filtered_titles != None:
             return len(self.filtered_titles)
         else:
             return len(self.titles)
 
     def data(self, index, role=Qt.DisplayRole):
-        current = self.filtered_titles if self.filtered_titles else self.titles
+        current = self.filtered_titles if self.filtered_titles != None else self.titles
         if role == Qt.DisplayRole:
             return QVariant(current[index.row()])
         else:
             return QVariant()
 
     def get_rel_href(self, index):
-        current = self.filtered_titles if self.filtered_titles else self.titles
+        current = self.filtered_titles if self.filtered_titles != None else self.titles
         return self.items[current[index]]
 
 
