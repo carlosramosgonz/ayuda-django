@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import shelve
 import sys
 from PyQt5.QtCore import QAbstractListModel, QModelIndex, Qt, QVariant, pyqtSlot, QUrl
 from PyQt5.QtWidgets import QApplication, QMainWindow
@@ -26,6 +27,27 @@ from bs4 import BeautifulSoup
 #DOCS_PATH = '/Users/carlos/Downloads/django-docs-1/'
 
 INDEX_FILENAME = 'genindex.html'
+
+CACHE_PATH = '~/.django-index-cache'
+
+
+def get_index_from_cache():
+    """Devuelve el diccionario del índice de la caché, o None si la caché no ha
+       sido creada.
+    """
+    cache_fullpath = os.path.expanduser(CACHE_PATH)
+    with shelve.open(cache_fullpath) as db:
+        if 'index-dict' not in db:
+            return None
+        else:
+            return db['index-dict']
+
+
+def save_to_cache(index_dict):
+    """Guardar el diccionario en la caché."""
+    cache_fullpath = os.path.expanduser(CACHE_PATH)
+    with shelve.open(cache_fullpath) as db:
+        db['index-dict'] = index_dict
 
 
 def leer_indice():
@@ -120,7 +142,11 @@ class AyudaWindow(QMainWindow):
 
 
 if __name__ == '__main__':
-    dict_index = leer_indice()
+    dict_index = get_index_from_cache()
+    # Si el dic. está en caché, crearlo y guardarlo
+    if not dict_index:
+        dict_index = leer_indice()
+        save_to_cache(dict_index)
     indice_model = IndiceModel(items=dict_index)
     app = QApplication(sys.argv)
     ayuda_window = AyudaWindow(indice_model=indice_model)
