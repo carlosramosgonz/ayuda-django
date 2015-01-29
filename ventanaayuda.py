@@ -2,11 +2,10 @@
 
 # Form implementation generated from reading ui file 'ventanaayuda.ui'
 #
-# Created: Thu Jan 29 13:40:05 2015
+# Created: Thu Jan 29 18:48:21 2015
 #      by: PyQt5 UI code generator 5.4
 #
 # WARNING! All changes made in this file will be lost!
-#
 
 # Copyright (C) 2015 Carlos Ramos González, <carlos+git@carlosramos.me>
 #
@@ -31,11 +30,12 @@ class Ui_MainWindow(object):
         MainWindow.resize(966, 661)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.centralwidget)
-        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        self.horizontalLayout = QtWidgets.QHBoxLayout()
+        self.horizontalLayout = QtWidgets.QHBoxLayout(self.centralwidget)
         self.horizontalLayout.setObjectName("horizontalLayout")
-        self.tabWidget = QtWidgets.QTabWidget(self.centralwidget)
+        self.splitter = QtWidgets.QSplitter(self.centralwidget)
+        self.splitter.setOrientation(QtCore.Qt.Horizontal)
+        self.splitter.setObjectName("splitter")
+        self.tabWidget = QtWidgets.QTabWidget(self.splitter)
         self.tabWidget.setObjectName("tabWidget")
         self.contentsTab = QtWidgets.QWidget()
         self.contentsTab.setObjectName("contentsTab")
@@ -60,12 +60,10 @@ class Ui_MainWindow(object):
         self.verticalLayout.addWidget(self.listView)
         self.verticalLayout_2.addLayout(self.verticalLayout)
         self.tabWidget.addTab(self.indexTab, "")
-        self.horizontalLayout.addWidget(self.tabWidget)
-        self.webView = QtWebKitWidgets.QWebView(self.centralwidget)
+        self.webView = QtWebKitWidgets.QWebView(self.splitter)
         self.webView.setUrl(QtCore.QUrl("about:blank"))
         self.webView.setObjectName("webView")
-        self.horizontalLayout.addWidget(self.webView)
-        self.horizontalLayout_2.addLayout(self.horizontalLayout)
+        self.horizontalLayout.addWidget(self.splitter)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 966, 22))
