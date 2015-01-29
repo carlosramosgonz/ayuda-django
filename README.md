@@ -19,7 +19,6 @@ Aplicación para buscar en la documentación HTML de Django.
 
 ### Por implementar
 
-- Usar un "split view" o similar para hacer la barra lateral redimensionable.
 - Pestaña "Contenido". Muestra la documentación por temas.
 - Caché del índice generado.
 - Marcadores.
