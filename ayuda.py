@@ -79,7 +79,7 @@ class IndiceModel(QAbstractListModel):
         if len(word) == 0:
             self.filtered_titles = None
         else:
-            self.filtered_titles = tuple(filter(lambda x: x.startswith(word), self.titles))
+            self.filtered_titles = tuple(title for title in self.titles if title.startswith(word))
 
     def rowCount(self, parent=QModelIndex()):
         if self.filtered_titles:
