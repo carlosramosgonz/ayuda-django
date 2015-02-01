@@ -15,12 +15,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import configparser
 import os
 import shelve
 import sys
 from PyQt5.QtCore import QAbstractListModel, QModelIndex, Qt, QVariant, pyqtSlot, QUrl
-from PyQt5.QtWidgets import QApplication, QMainWindow
+from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog, QFileDialog
 from ventanaayuda import Ui_MainWindow
+from directorydialog import Ui_DirectoryDialog
 from bs4 import BeautifulSoup
 
 # Ruta donde se encuentra la documentación HTML de Django
@@ -29,6 +31,52 @@ from bs4 import BeautifulSoup
 INDEX_FILENAME = 'genindex.html'
 
 CACHE_PATH = '~/.django-index-cache'
+CONFIG_PATH = '~/.djangohelpviewer.conf'
+_docs_path = None
+
+
+def get_docs_path_from_config():
+    global _docs_path
+    if _docs_path:
+        return _docs_path
+
+    config = configparser.ConfigParser()
+    if config.read(os.path.expanduser(CONFIG_PATH)):
+        if 'general' in config and 'DjangoDocsDir' in config['general']:
+            _docs_path = config['general']['DjangoDocsDir']
+            return _docs_path
+
+    return None
+
+
+def save_docs_path_to_config(docs_path):
+    global _docs_path
+    _docs_path = docs_path
+
+    config = configparser.ConfigParser()
+    config['general'] = {'DjangoDocsDir': docs_path}
+    with open(os.path.expanduser(CONFIG_PATH), 'w') as configfile:
+        config.write(configfile)
+
+
+class DirectoryDialog(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.ui = Ui_DirectoryDialog()
+        self.ui.setupUi(self)
+
+    @property
+    def docs_path(self):
+        return self.ui.directoryEdit.text()
+
+    @pyqtSlot()
+    def on_openButton_clicked(self):
+        filename = QFileDialog.getExistingDirectory(self, "Abrir directorio", os.path.expanduser('~'))
+        self.ui.directoryEdit.setText(filename)
+
+
+def get_docs_path():
+    return _docs_path
 
 
 def get_index_from_cache():
@@ -57,13 +105,7 @@ def leer_indice():
     Devuelve un diccionario.
     """
 
-    try:
-        djangodir = DOCS_PATH
-    except NameError:
-        print('Error: Debe definir DOCS_PATH en el código fuente. Saliendo.', file=sys.stderr)
-        sys.exit(1)
-
-    path = os.path.join(djangodir, INDEX_FILENAME)
+    path = os.path.join(get_docs_path(), INDEX_FILENAME)
 
     soup = BeautifulSoup(open(path))
     index = {}
@@ -86,7 +128,7 @@ def leer_indice():
 
 
 def get_realhref(rel_href):
-    finalpath = os.path.join(DOCS_PATH, rel_href)
+    finalpath = os.path.join(get_docs_path(), rel_href)
     return 'file://' + finalpath
 
 
@@ -142,13 +184,25 @@ class AyudaWindow(QMainWindow):
 
 
 if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    
+    docs_path = get_docs_path_from_config()
+    if not docs_path:
+        directory_dialog = DirectoryDialog()
+        result = directory_dialog.exec_()
+        if result:
+            docs_path = directory_dialog.docs_path
+            save_docs_path_to_config(docs_path)
+        else:
+            print("El usuario no dado un directorio. Saliendo")
+            sys.exit(-1)
+
     dict_index = get_index_from_cache()
-    # Si el dic. está en caché, crearlo y guardarlo
+    # Si el dic. no está en caché, crearlo y guardarlo
     if not dict_index:
         dict_index = leer_indice()
         save_to_cache(dict_index)
     indice_model = IndiceModel(items=dict_index)
-    app = QApplication(sys.argv)
     ayuda_window = AyudaWindow(indice_model=indice_model)
     ayuda_window.show()
     sys.exit(app.exec_())
