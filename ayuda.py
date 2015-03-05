@@ -19,6 +19,7 @@ import configparser
 import os
 import shelve
 import sys
+from urllib.parse import quote
 from PyQt5.QtCore import QAbstractListModel, QModelIndex, Qt, QVariant, pyqtSlot, QUrl
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog, QFileDialog
 from ventanaayuda import Ui_MainWindow
@@ -128,8 +129,8 @@ def leer_indice():
 
 
 def get_realhref(rel_href):
-    finalpath = os.path.join(get_docs_path(), rel_href)
-    return 'file://' + finalpath
+    finalpath = get_docs_path() + '/' + rel_href
+    return 'file:///' + quote(finalpath, safe='/:\\#')
 
 
 class IndiceModel(QAbstractListModel):
