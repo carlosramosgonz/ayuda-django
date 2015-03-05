@@ -16,11 +16,11 @@ Aplicación para buscar en la documentación HTML de Django.
 
 - Índice (generado sobre la marcha usando la documentación)
 - Búsqueda sobre ese índice
+- Caché del índice generado.
 
 ### Por implementar
 
 - Pestaña "Contenido". Muestra la documentación por temas.
-- Caché del índice generado.
 - Marcadores.
 - Botones atrás/adelante para navegación.
 - Opción de usar la documentación en línea en lugar de tener que descargar la versión offline,
