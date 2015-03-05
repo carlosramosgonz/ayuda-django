@@ -30,8 +30,8 @@ from bs4 import BeautifulSoup
 
 INDEX_FILENAME = 'genindex.html'
 
-CACHE_PATH = '~/.django-index-cache'
-CONFIG_PATH = '~/.djangohelpviewer.conf'
+CACHE_PATH = os.path.join('~', '.django-index-cache')
+CONFIG_PATH = os.path.join('~', '.djangohelpviewer.conf')
 _docs_path = None
 
 
