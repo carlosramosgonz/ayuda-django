@@ -60,7 +60,7 @@ class Ui_MainWindow(object):
         self.verticalLayout.addWidget(self.listView)
         self.verticalLayout_2.addLayout(self.verticalLayout)
         self.tabWidget.addTab(self.indexTab, "")
-        self.webView = QtWebKitWidgets.QWebView(self.splitter)
+        self.webView = QtWebEngineWidgets.QWebEngineView(self.splitter)
         self.webView.setUrl(QtCore.QUrl("about:blank"))
         self.webView.setObjectName("webView")
         self.horizontalLayout.addWidget(self.splitter)
@@ -84,4 +84,4 @@ class Ui_MainWindow(object):
         self.indexSearchEdit.setPlaceholderText(_translate("MainWindow", "Buscar..."))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.indexTab), _translate("MainWindow", "Índice"))
 
-from PyQt5 import QtWebKitWidgets
+from PyQt5 import QtWebEngineWidgets

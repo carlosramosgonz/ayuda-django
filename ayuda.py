@@ -27,7 +27,7 @@ from directorydialog import Ui_DirectoryDialog
 from bs4 import BeautifulSoup
 
 # Ruta donde se encuentra la documentación HTML de Django
-#DOCS_PATH = '/Users/carlos/Downloads/django-docs-1/'
+#DOCS_PATH = '/Users/carlos/Downloads/django-docs-3.1-en/'
 
 INDEX_FILENAME = 'genindex.html'
 
@@ -115,7 +115,7 @@ def leer_indice():
     for table in tables:
         if 'genindextable' not in table['class']:
             break
-        words = table.find_all('dt')
+        words = table.find_all('li')
 
         while len(words):
             dt = words.pop(0)
